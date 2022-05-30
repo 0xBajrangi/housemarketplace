@@ -16,7 +16,7 @@ import Spinner from '../components/Spinner';
 import { async } from '@firebase/util';
 import ListingItem from '../components/ListingItem';
 
-const Offers = () => {
+const Category = () => {
   const [listings, setListings] = useState(null);
   const [loading, setLoading] = useState(true);
   const params = useParams();
@@ -24,30 +24,30 @@ const Offers = () => {
     const fetchListing = async () => {
       try {
         const listingRef = collection(db, 'listings');
-        console.log({listingRef});
+      
 
-        // create a queryf
+        // create a query
         const q = query(
           listingRef,
-          where('offer', '==', true),
+          where('type', '==', params.categoryName),
           orderBy('timestamp'),
           limit(10)
         );
         //   execute the query
         const querySnap = await getDocs(q);
-        console.log({ querySnap });
+        
         let listings = [];
         querySnap.forEach((doc) => {
-          console.log("ehllo",doc.data());
+          
           return listings.push({
             id: doc.id,
             data: doc.data(),
           });
         });
         setListings(listings);
+        console.log(listings)
         setLoading(false);
       } catch (error) {
-        console.log(error);
         toast.error('could not fetch listing');
       }
     };
@@ -57,7 +57,9 @@ const Offers = () => {
     <div className="category">
       <header>
         <p className="pageHeader">
-       Offers
+          {params.categoryname == 'rent'
+            ? 'Places for Rent'
+            : 'Places for sale'}
         </p>
       </header>
       {loading ? (
@@ -67,7 +69,6 @@ const Offers = () => {
           <main>
             <ul className="categoryListings">
               {listings.map((list) => {
-                console.log({ list });
                 return (
                   <ListingItem listing={list.data} id={list.id} key={list.id} />
                 );
@@ -76,10 +77,10 @@ const Offers = () => {
           </main>
         </>
       ) : (
-        <p>No listing Offers</p>
+        <p>No listing for {params.categoryName}</p>
       )}
     </div>
   );
 };
 
-export default Offers;
+export default Category;

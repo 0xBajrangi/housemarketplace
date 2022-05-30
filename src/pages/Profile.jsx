@@ -1,10 +1,21 @@
 import React from 'react';
 import { getAuth, updateProfile } from 'firebase/auth';
-import {toast} from "react-toastify"
+import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { db } from '../firebase.config';
-import { updateDoc,doc } from 'firebase/firestore';
+import { updateDoc, doc } from 'firebase/firestore';
+import homeIcon from "../assets/svg/homeIcon.svg"
+import arrowRight from '../assets/svg/keyboardArrowRightIcon.svg';
+
+
+
+
+
+
+
+
+
 export default function Profile() {
   const auth = getAuth();
   const [changeDetails, setChangeDetails] = useState(false);
@@ -20,35 +31,31 @@ export default function Profile() {
     auth.signOut();
     navigate('/');
   };
-  const onSubmit =async () => {
+  const onSubmit = async () => {
     try {
       if (auth.currentUser.displayName !== name) {
-      // updatae profile
-        await updateProfile(auth.currentUser,{
-          displayName: name
-        })
-// update in firestore
-        const userRef = doc(db, "users", auth.currentUser.uid);
+        // updatae profile
+        await updateProfile(auth.currentUser, {
+          displayName: name,
+        });
+        // update in firestore
+        const userRef = doc(db, 'users', auth.currentUser.uid);
         await updateDoc(userRef, {
           name,
-          email
-        })
-
-    }
+          email,
+        });
+      }
     } catch (e) {
-      toast.error("could not update profile Details")
-  }
-}
+      toast.error('could not update profile Details');
+    }
+  };
   const onChange = (e) => {
-    console.log(e.target.value)
-    setFormData((prev) => 
-      ({
-        ...prev,
-        [e.target.id]:e.target.value,
-      
-    })
-    )
-  }
+    console.log(e.target.value);
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
   return (
     <div className="profile">
       <header className="profileHeader">
@@ -63,7 +70,7 @@ export default function Profile() {
           <p
             className="changePersonalDetails"
             onClick={() => {
-               changeDetails && onSubmit();
+              changeDetails && onSubmit();
               setChangeDetails((prev) => !prev);
             }}
           >
@@ -71,7 +78,7 @@ export default function Profile() {
           </p>
         </div>
         <div className="profileCard">
-          {changeDetails? <h4>Change only Name</h4>:"" }
+          {changeDetails ? <h4>Change only Name</h4> : ''}
           <form>
             <input
               type="text"
@@ -91,6 +98,11 @@ export default function Profile() {
             />
           </form>
         </div>
+        <Link to="/create-listing" className="createListing">
+          <img src={homeIcon} alt="home" />
+          <p>Sell or rent your Home</p>
+          <img src={arrowRight} alt="arrow right" />
+        </Link>
       </main>
     </div>
   );

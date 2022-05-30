@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg';
 import visibilityIcon from '../assets/svg/visibilityIcon.svg';
 import { toast } from 'react-toastify';
+import OAuth from './../components/OAuth';
 
 
 export default function SignUp() {
@@ -118,7 +119,7 @@ export default function SignUp() {
         </form>
 
         {/* <OAuth /> */}
-
+        <OAuth />
         <Link to="/sign-in" className="registerLink">
           Sign In Instead
         </Link>
